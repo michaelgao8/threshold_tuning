@@ -41,7 +41,7 @@ dashboardBody(
             )
     ),
     tabItem(tabName = "Tuning",
-            sliderInput("risk_threshold", "Risk Threshold", min = 0, max = 1, value = 0.5, step = 0.01),
+            uiOutput("risk_slider"),#, "Risk Threshold", min = 0, max = 1, value = 0.5, step = 0.01),
             verbatimTextOutput("conf_mat"),
             rbokehOutput('roc')
     )

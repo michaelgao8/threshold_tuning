@@ -26,6 +26,11 @@ shinyServer(function(input, output) {
   # Preview
   output$prediction_preview <- renderTable(head(prediction_upload()))
   
+  # Change slider input
+  output$risk_slider <- renderUI({
+    sliderInput("risk_threshold", "Risk Threshold", min = round(min(prediction_upload()[,2]), digits = 2), max = round(max(prediction_upload()[,2]), digits = 2), value = 0.5, step = 0.01)
+  })
+  
   observeEvent(prediction_upload(),{
     # Create the interactive ROC curve
     # Need sensitivity and specificity at all levels
@@ -36,7 +41,7 @@ shinyServer(function(input, output) {
     thresh <- c()
     
     
-    for(th in seq(0, 1, 0.01)){
+    for(th in seq(round(min(prediction_upload()[,2]),digits = 2), round(max(prediction_upload()[,2]), digits = 2), length.out = 100)){
       new_thresh <- ifelse(prediction_upload()[,2] >= th, 1, 0)
       tp <- c(tp, length(which(new_thresh == 1 & historical_upload()[,2] == 1)))
       fp <- c(fp, length(which(new_thresh == 1 & historical_upload()[,2] == 0)))
