@@ -2,6 +2,7 @@
 library(rbokeh)
 library(shiny)
 library(caret)
+library(e1071)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -20,6 +21,7 @@ shinyServer(function(input, output) {
   prediction_upload <- reactive({
     upload2 <- input$predictions
     if(is.null(upload2)){return()}
+    output$file_name <- renderText({upload2$name})
     read.csv(file=upload2$datapath, stringsAsFactors = FALSE)
   })
   
@@ -30,6 +32,7 @@ shinyServer(function(input, output) {
   output$risk_slider <- renderUI({
     sliderInput("risk_threshold", "Risk Threshold", min = round(min(prediction_upload()[,2]), digits = 2), max = round(max(prediction_upload()[,2]), digits = 2), value = 0.5, step = 0.01)
   })
+  
   
   observeEvent(prediction_upload(),{
     # Create the interactive ROC curve
@@ -71,7 +74,11 @@ shinyServer(function(input, output) {
     
   }
   )
-  output$roc <- renderRbokeh({figure(width = 800, height = 800) %>% 
-      ly_points(roc_x, sensitivity, data = roc_df, hover = list(thresh, sensitivity, roc_x, ppv, npv))})
+  
+  observeEvent(prediction_upload(),{
+    output$roc <- renderRbokeh({figure(width = 800, height = 800) %>% 
+    ly_points(roc_x, sensitivity, data = roc_df, hover = list(thresh, sensitivity, roc_x, ppv, npv))})
+    
+  })
   
 })

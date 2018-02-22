@@ -3,6 +3,7 @@
 library(rbokeh)
 library(shiny)
 library(shinydashboard)
+library(e1071)
 
 dashboardPage(
   ### DASHBOARD HEAD ###
@@ -41,6 +42,7 @@ dashboardBody(
             )
     ),
     tabItem(tabName = "Tuning",
+            textOutput("file_name"),
             uiOutput("risk_slider"),#, "Risk Threshold", min = 0, max = 1, value = 0.5, step = 0.01),
             verbatimTextOutput("conf_mat"),
             rbokehOutput('roc')
