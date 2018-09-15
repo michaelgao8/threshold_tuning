@@ -1,5 +1,7 @@
 # Generate data
 
+library(dplyr)
+
 set.seed(1234)
 ids <- sample(1000000:9999999, size = 40000)
 
@@ -18,3 +20,7 @@ fake_risk <- c(runif(floor(length(ids)*0.2), 0.4, 0.8), runif((length(ids) - flo
 fake_df <- as.data.frame(cbind(ids, fake_risk))
 
 write.csv(fake_df, "fake.csv", row.names = FALSE)
+
+full_df <- left_join(historical_df, fake_df)
+
+write.csv(full_df, "full.csv", row.names = FALSE)
