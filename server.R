@@ -3,6 +3,7 @@ library(rbokeh)
 library(shiny)
 library(caret)
 library(DT)
+library(e1071)
 
 options(shiny.maxRequestSize=30*1024^2)
 # Define server logic required to draw a histogram
@@ -69,7 +70,7 @@ shinyServer(function(input, output){
   risk <- reactive({input$risk_threshold})
   observeEvent(risk(),{
     thresholded_predictions <- ifelse(historical_upload()[[input$select_model_output]] >= risk(), 1, 0)
-    output$conf_mat <- renderPrint({confusionMatrix(data = factor(thresholded_predictions), reference = factor(historical_upload()[[input$select_reference]]))})
+    output$conf_mat <- renderPrint({confusionMatrix(data = factor(thresholded_predictions, levels = c(1,0)), reference = factor(historical_upload()[[input$select_reference]], levels = c(1,0)))})
     
   
     

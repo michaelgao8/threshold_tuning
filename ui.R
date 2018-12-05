@@ -4,6 +4,7 @@ library(rbokeh)
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(e1071)
 
 dashboardPage(
   ### DASHBOARD HEAD ###
